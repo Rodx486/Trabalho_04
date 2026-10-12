@@ -11,9 +11,9 @@ public class Main {
         pagamentos.add(new EmpregadoAssalariado("Bruno Lima", "A002", "Assistente", 1500.00f));
 
         pagamentos.add(new FuncionariosHoristas("Carla Mendes", "H001", "Técnica", 25.00f,
-                new float[] {8.0f, 8.0f, 8.0f, 8.0f, 10.0f}));
+                new float[] { 8.0f, 8.0f, 8.0f, 8.0f, 10.5f }));
         pagamentos.add(new FuncionariosHoristas("Diego Alves", "H002", "Operador", 22.50f,
-                new float[] {7.5f, 8.0f, 8.0f, 7.5f, 7.0f}));
+                new float[] { 7.5f, 8.0f, 8.0f, 7.5f, 7.0f }));
 
         pagamentos.add(new FuncionariosComissionados("Elisa Rocha", "C001", "Vendedora", 12000.00f, 8.0f));
         pagamentos.add(new FuncionariosComissionados("Felipe Costa", "C002", "Vendedor", 9500.00f, 7.5f));
@@ -21,14 +21,25 @@ public class Main {
         pagamentos.add(new Comissionado_Assalariado("Giovana Reis", "CA001", "Supervisora", 2000.00f, 10000.00f, 5.0f));
         pagamentos.add(new Comissionado_Assalariado("Heitor Nunes", "CA002", "Coordenador", 2300.00f, 14000.00f, 4.0f));
 
-        //processa os pagamentos de cada objeto que implementa a interface Pagamento
-        pagamentos.forEach(pagamento -> {
-            float valorPagamento = pagamento.processarPagamento();
-            System.out.printf("Valor do pagamento: R$ %.2f%n", valorPagamento);
-        });
-   
-   
+        // processa os pagamentos de cada objeto que implementa a interface Pagamento
+        for (Pagamento pagamento : pagamentos) {
+            try {
+                float valor = pagamento.processarPagamento();
+                if (pagamento instanceof Empregado empregado) {
+                    System.out.print("\n");
+                    System.out.println("Nome do funcionário: " + empregado.getNome());
+                }
+                System.out.printf("Valor do pagamento: R$ %.2f%n", valor);
+            } catch (ExcessoHorasExtrasException e) {
+                if (pagamento instanceof FuncionariosHoristas horista) {
+                    float valor = horista.calcularValorPagamento();
+                    System.out.print("\n");
+                    System.out.printf(
+                        "PAGAMENTO SINALIZADO - Excesso de horas extras. Funcionário: %s | Valor: R$ %.2f%n",
+                        horista.getNome(), valor
+                    );
+                }
+            }
+        }
     }
-
-    
 }

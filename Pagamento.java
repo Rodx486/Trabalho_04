@@ -1,5 +1,4 @@
 public interface Pagamento {
 
-    public float processarPagamento();
-
+    float processarPagamento() throws ExcessoHorasExtrasException;
 }
