@@ -10,8 +10,16 @@ public class EmpregadoAssalariado extends Empregado {
         this.salarioSemanal = salarioSemanal;
     }
 
+    public float getSalarioSemanal() {
+        return salarioSemanal;
+    }
+
+    public float calcularValorPagamento() {
+        return salarioSemanal;
+    }
+
     @Override
     public float processarPagamento() {
-        return salarioSemanal;
+        return calcularValorPagamento();
     }
 }

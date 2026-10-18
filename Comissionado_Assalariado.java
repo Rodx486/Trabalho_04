@@ -18,9 +18,28 @@ public class Comissionado_Assalariado extends Empregado {
         this.percentualComissao = percentualComissao;
     }
 
+    public float getSalarioBaseSemanal() {
+        return salarioBaseSemanal;
+    }
+
+    public float getVendasSemanais() {
+        return vendasSemanais;
+    }
+
+    public float getPercentualComissao() {
+        return percentualComissao;
+    }
+
+    public float getSalarioBaseComReajuste() {
+        return salarioBaseSemanal * (1 + REAJUSTE_TEMPORARIO);
+    }
+
+    public float calcularValorPagamento() {
+        return getSalarioBaseComReajuste() + (vendasSemanais * percentualComissao / 100.0f);
+    }
+
     @Override
     public float processarPagamento() {
-        float salarioBaseComReajuste = salarioBaseSemanal * (1 + REAJUSTE_TEMPORARIO);
-        return salarioBaseComReajuste + (vendasSemanais * percentualComissao / 100.0f);
+        return calcularValorPagamento();
     }
 }

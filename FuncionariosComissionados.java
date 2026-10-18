@@ -12,9 +12,20 @@ public class FuncionariosComissionados extends Empregado {
         this.percentualComissao = percentualComissao;
     }
 
-    @Override
-    public float processarPagamento() {
+    public float getVendasSemanais() {
+        return vendasSemanais;
+    }
+
+    public float getPercentualComissao() {
+        return percentualComissao;
+    }
+
+    public float calcularValorPagamento() {
         return vendasSemanais * percentualComissao / 100.0f;
     }
-}
 
+    @Override
+    public float processarPagamento() {
+        return calcularValorPagamento();
+    }
+}

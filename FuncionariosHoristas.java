@@ -14,12 +14,34 @@ public class FuncionariosHoristas extends Empregado {
         this.horasPorDia = horasPorDia.clone();
     }
 
-    public float calcularValorPagamento() {
+    public float getValorHora() {
+        return valorHora;
+    }
 
+    public float[] getHorasPorDia() {
+        return horasPorDia.clone();
+    }
+
+    public float getTotalHorasTrabalhadas() {
         float totalHorasTrabalhadas = 0.0f;
         for (float horas : horasPorDia) {
             totalHorasTrabalhadas += horas;
         }
+        return totalHorasTrabalhadas;
+    }
+
+    public boolean temExcessoHorasExtrasDiarias() {
+        for (float horas : horasPorDia) {
+            if (horas > LIMITE_HORAS_NORMAIS_DIARIAS + 2.0f) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public float calcularValorPagamento() {
+
+        float totalHorasTrabalhadas = getTotalHorasTrabalhadas();
 
         float pagamento = 0.0f;
 
@@ -33,10 +55,8 @@ public class FuncionariosHoristas extends Empregado {
     }
 
     private void validarHorasExtrasDiarias() throws ExcessoHorasExtrasException {
-        for (float horas : horasPorDia) {
-            if (horas > LIMITE_HORAS_NORMAIS_DIARIAS + 2.0f) {
-                throw new ExcessoHorasExtrasException("Excesso de horas extras em um dia.");
-            }
+        if (temExcessoHorasExtrasDiarias()) {
+            throw new ExcessoHorasExtrasException("Excesso de horas extras em um dia.");
         }
     }
 
