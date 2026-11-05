@@ -33,25 +33,48 @@ public class Main {
         System.out.println("\nPressione Enter para iniciar o processamento dos pagamentos...");
         new Scanner(System.in).nextLine();
 
-        System.out.println("\n=== Processamento da folha de pagamento ===");
-        for (Pagamento pagamento : pagamentos) {
-            try {
-                float valor = pagamento.processarPagamento();
-                if (pagamento instanceof Empregado empregado) {
-                    System.out.print("\n");
-                    System.out.println("Nome do funcionário: " + empregado.getNome());
-                }
-                System.out.printf("Valor do pagamento: R$ %.2f%n", valor);
-            } catch (ExcessoHorasExtrasException e) {
-                if (pagamento instanceof FuncionariosHoristas horista) {
-                    float valor = horista.calcularValorPagamento();
-                    System.out.print("\n");
-                    System.out.printf(
-                            "PAGAMENTO SINALIZADO - Excesso de horas extras. Funcionário: %s | Valor: R$ %.2f%n",
-                            horista.getNome(), valor
-                    );
-                }
-            }
+        PayrollService servicoFolha = new PayrollService();
+
+        System.out.println("\n=== Cenário 1: caminho feliz ===");
+        Pagamento[] loteValido = {
+                new Fatura(2, 50.0f),
+                new EmpregadoAssalariado("Ana Souza", "A001", "Analista", 1800.00f),
+                new FuncionariosHoristas("Carla Mendes", "H001", "Técnica", 25.00f,
+                        new float[] { 8.0f, 8.0f, 8.0f, 8.0f, 8.0f })
+        };
+        try {
+            servicoFolha.processarLote(loteValido);
+        } catch (FalhaProcessamentoFolhaException e) {
+            System.err.println("Falha inesperada no cenário feliz.");
+            e.printStackTrace();
+        }
+
+        System.out.println("\n=== Cenário 2: violação trabalhista ===");
+        Pagamento[] loteComViolacao = {
+                new FuncionariosHoristas("Diego Alves", "H002", "Operador", 22.50f,
+                        new float[] { 8.0f, 8.0f, 12.0f, 8.0f, 8.0f })
+        };
+        try {
+            servicoFolha.processarLote(loteComViolacao);
+        } catch (FalhaProcessamentoFolhaException e) {
+            System.err.println("Falha de processamento capturada no Main:");
+            e.printStackTrace();
+        }
+
+        System.out.println("\n=== Cenário 3: falha com rollback ===");
+        Pagamento[] loteComRollback = {
+                new EmpregadoAssalariado("Ana Souza", "A001", "Analista", 1800.00f),
+                new Fatura(1, 100.0f),
+                new EmpregadoAssalariado("Bruno Lima", "A002", "Assistente", 1500.00f),
+                new FuncionariosHoristas("Caio Nunes", "H003", "Operador", 22.50f,
+                        new float[] { 8.0f, 12.0f, 8.0f, 8.0f, 8.0f }),
+                new EmpregadoAssalariado("Elisa Rocha", "A003", "Analista", 1700.00f)
+        };
+        try {
+            servicoFolha.processarLote(loteComRollback);
+        } catch (FalhaProcessamentoFolhaException e) {
+            System.err.println("Falha no lote de rollback capturada no Main:");
+            e.printStackTrace();
         }
     }
 

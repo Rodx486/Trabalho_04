@@ -5,7 +5,7 @@ public class EmpregadoAssalariado extends Empregado {
     public EmpregadoAssalariado(String nome, String matricula, String cargo, float salarioSemanal) {
         super(nome, matricula, cargo);
         if (salarioSemanal < 0) {
-            throw new IllegalArgumentException("O salário semanal não pode ser negativo.");
+            throw new DadosInvalidosException("O salário semanal não pode ser negativo.");
         }
         this.salarioSemanal = salarioSemanal;
     }

@@ -11,7 +11,7 @@ public class Comissionado_Assalariado extends Empregado {
         super(nome, matricula, cargo);
         if (salarioBaseSemanal < 0 || vendasSemanais < 0
                 || percentualComissao < 0 || percentualComissao > 100) {
-            throw new IllegalArgumentException("Valores não podem ser negativos e a comissão deve estar entre 0 e 100%.");
+            throw new DadosInvalidosException("Valores não podem ser negativos e a comissão deve estar entre 0 e 100%.");
         }
         this.salarioBaseSemanal = salarioBaseSemanal;
         this.vendasSemanais = vendasSemanais;
